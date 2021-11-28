@@ -11,12 +11,21 @@ class App extends Component {
     loading: false,
   }
 
-  async componentDidMount() {
+  // Show first 30 users of Github before search
+  // async componentDidMount() {
+  //   this.setState({ loading: true })
+
+  //   const res = await axios.get('https://api.github.com/users')
+
+  //   this.setState({ users: res.data, loading: false })
+  // }
+
+  searchUsers = async (text) => {
     this.setState({ loading: true })
 
-    const res = await axios.get('https://api.github.com/users')
+    const res = await axios.get(`https://api.github.com/search/users?q=${text}`)
 
-    this.setState({ users: res.data, loading: false })
+    this.setState({ users: res.data.items, loading: false })
   }
 
   render() {
@@ -24,7 +33,7 @@ class App extends Component {
       <div className='App'>
         <Navbar />
         <div className='container'>
-          <Search />
+          <Search searchUsers={this.searchUsers} />
           <Users loading={this.state.loading} users={this.state.users} />
         </div>
       </div>
