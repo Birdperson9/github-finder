@@ -2,6 +2,7 @@ import React, { Fragment, Component } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
 import Users from './components/users/Users'
+import User from './components/users/User'
 import Search from './components/users/Search'
 import Alert from './components/layout/Alert'
 import About from './components/pages/About'
@@ -11,6 +12,7 @@ import './App.css'
 class App extends Component {
   state = {
     users: [],
+    user: {},
     loading: false,
     alert: null,
   }
@@ -32,6 +34,15 @@ class App extends Component {
     this.setState({ users: res.data.items, loading: false })
   }
 
+  //Get single Github user
+  getUser = async (username) => {
+    this.setState({ loading: true })
+
+    const res = await axios.get(`https://api.github.com/users/${username}`)
+
+    this.setState({ user: res.data, loading: false })
+  }
+
   // Clear users from state
   clearUsers = () => this.setState({ users: [], loading: false })
 
@@ -42,7 +53,7 @@ class App extends Component {
   }
 
   render() {
-    const { users, loading, alert } = this.state
+    const { users, user, loading, alert } = this.state
 
     return (
       <Router>
@@ -66,6 +77,12 @@ class App extends Component {
                 }
               />
               <Route path='/about' element={<About />} />
+              <Route
+                path='/user/:login'
+                element={
+                  <User getUser={this.getUser} user={user} loading={loading} />
+                }
+              />
             </Routes>
           </div>
         </div>
