@@ -19,24 +19,6 @@ const App = () => {
   const [loading, setLoading] = useState(false)
   const [alert, setAlert] = useState(null)
 
-  // Show first 30 users of Github before search
-  // async componentDidMount() {
-  //   this.setState({ loading: true })
-
-  //   const res = await axios.get('https://api.github.com/users')
-
-  //   this.setState({ users: res.data, loading: false })
-  // }
-
-  const searchUsers = async (text) => {
-    setLoading(true)
-
-    const res = await axios.get(`https://api.github.com/search/users?q=${text}`)
-
-    setUsers(res.data.items)
-    setLoading(false)
-  }
-
   //Get single Github user
   const getUser = async (username) => {
     setLoading(true)
@@ -83,7 +65,6 @@ const App = () => {
                 element={
                   <Fragment>
                     <Search
-                      searchUsers={searchUsers}
                       clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
                       setAlert={showAlert}
