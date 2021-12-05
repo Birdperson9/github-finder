@@ -20,11 +20,18 @@ const GithubState = (props) => {
 
   const [state, dispatch] = useReducer(GithubReducer, initialState)
 
+  const github = axios.create({
+    baseURL: 'https://api.github.com',
+    headers: { Authorization: process.env.REACT_APP_GITHUB_TOKEN },
+  })
+
   // Search Users
   const searchUsers = async (text) => {
     setLoading()
 
-    const res = await axios.get(`https://api.github.com/search/users?q=${text}`)
+    const res = await github.get(
+      `https://api.github.com/search/users?q=${text}`
+    )
 
     dispatch({
       type: SEARCH_USERS,
@@ -36,7 +43,7 @@ const GithubState = (props) => {
   const getUser = async (username) => {
     setLoading()
 
-    const res = await axios.get(`https://api.github.com/users/${username}`)
+    const res = await github.get(`https://api.github.com/users/${username}`)
 
     dispatch({
       type: GET_USER,
@@ -48,7 +55,7 @@ const GithubState = (props) => {
   const getUserRepos = async (username) => {
     setLoading()
 
-    const res = await axios.get(
+    const res = await github.get(
       `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`
     )
 
